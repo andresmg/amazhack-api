@@ -97,6 +97,15 @@ module.exports.deleteReview = (req, res, next) => {
 
 module.exports.single = (req, res, next) => {
   Product.findById(req.params.id)
+    .populate("reviews")
+    .populate("user")
+    .populate({
+      path: 'reviews',
+      populate: {
+        path: 'user',
+        model: 'User'
+      }
+    })
     .then((prod) => {
       if (!prod) {
         throw createError(404, "Product not found")
